@@ -115,6 +115,8 @@ function GameSelectScreen({
     </div>
   );
 }
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
 export default function App() {
   const [authStatus, setAuthStatus] = useState<'loading' | 'login' | 'guest' | 'loggedIn' | 'selectGame'>('loading');
   const [user, setUser] = useState<UserProfile | null>(null);
@@ -133,7 +135,7 @@ export default function App() {
   });
   const logRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    fetch('http://localhost:3000/auth/status', { credentials: 'include' })
+    fetch(`${API_URL}/auth/status`, { credentials: 'include' })
       .then(r => r.json())
       .then(data => {
         console.log('Auth check response:', data);
@@ -153,7 +155,7 @@ export default function App() {
       });
   }, []);
   const fetchGames = useCallback(() => {
-    fetch('http://localhost:3000/api/games', { credentials: 'include' })
+    fetch(`${API_URL}/api/games`, { credentials: 'include' })
       .then(r => r.json())
       .then(setGames)
       .catch(() => {});
@@ -162,7 +164,7 @@ export default function App() {
     const params = new URLSearchParams(window.location.search);
     if (params.get('auth') === 'success') {
       window.history.replaceState({}, '', '/');
-      fetch('http://localhost:3000/auth/status', { credentials: 'include' })
+      fetch(`${API_URL}/auth/status`, { credentials: 'include' })
         .then(r => r.json())
         .then(data => {
           if (data.authenticated) {
@@ -175,7 +177,7 @@ export default function App() {
   }, [fetchGames]);
   const handleNewGame = async () => {
     const name = prompt('Name your world:', `City ${new Date().toLocaleDateString()}`) || 'My City';
-    const res = await fetch('http://localhost:3000/api/games', {
+    const res = await fetch(`${API_URL}/api/games`, {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
@@ -194,11 +196,11 @@ export default function App() {
   };
   const handleDeleteGame = async (id: string) => {
     if (!confirm('Delete this world permanently?')) return;
-    await fetch(`http://localhost:3000/api/games/${id}`, { method: 'DELETE', credentials: 'include' });
+    await fetch(`${API_URL}/api/games/${id}`, { method: 'DELETE', credentials: 'include' });
     fetchGames();
   };
   const handleLogout = async () => {
-    await fetch('http://localhost:3000/auth/logout', { method: 'POST', credentials: 'include' });
+    await fetch(`${API_URL}/api/auth/logout`, { method: 'POST', credentials: 'include' });
     setUser(null);
     setActiveGameId(null);
     setAuthStatus('guest');
@@ -248,13 +250,12 @@ export default function App() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-emerald-900 via-green-800 to-slate-900 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-6xl font-black text-white tracking-widest uppercase mb-2">CHAOSLAB</h1>
-          <p className="text-green-300 text-sm uppercase tracking-widest mb-12">Infinite City Builder</p>
-          <div className="flex flex-col items-center gap-4">
-            <a
-              href="http://localhost:3000/auth/google"
-              className="flex items-center gap-3 bg-white text-slate-800 px-8 py-4 rounded-xl font-bold text-lg hover:bg-slate-100 transition shadow-2xl"
-            >
+          <h1 className="text-5xl font-black text-white mb-4 tracking-tighter">CHAOSLAB</h1>
+          <p className="text-emerald-200/60 mb-8 max-w-sm mx-auto">The simulation requires authentication to persist your worlds across sessions.</p>
+          <a
+            href={`${API_URL}/auth/google`}
+            className="inline-flex items-center gap-3 bg-white text-emerald-950 px-8 py-4 rounded-full font-black hover:scale-105 active:scale-95 transition shadow-2xl shadow-emerald-500/20"
+          >
               <svg width="24" height="24" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                 <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>

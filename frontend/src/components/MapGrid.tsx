@@ -2,7 +2,8 @@ import { useEffect, useRef } from 'react';
 import * as PIXI from 'pixi.js';
 import { Viewport } from 'pixi-viewport';
 import { io } from 'socket.io-client';
-const socket = io('http://localhost:3000', { withCredentials: true });
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const socket = io(API_URL, { withCredentials: true });
 (window as any).__chaosSocket = socket;
 interface MapGridProps {
   tileSize?: number;
