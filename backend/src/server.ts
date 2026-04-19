@@ -38,11 +38,17 @@ if (OAUTH_CONFIGURED) {
 const app = express();
 app.use(cors({ origin: FRONTEND_URL, credentials: true }));
 app.use(express.json());
+const isProd = process.env.NODE_ENV === 'production' || FRONTEND_URL.includes('vercel.app');
+app.set('trust proxy', 1);
 app.use(session({
   secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
-  cookie: { maxAge: 7 * 24 * 60 * 60 * 1000 }, 
+  cookie: { 
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    sameSite: isProd ? 'none' : 'lax',
+    secure: isProd
+  }, 
 }));
 app.use(passport.initialize());
 app.use(passport.session());
