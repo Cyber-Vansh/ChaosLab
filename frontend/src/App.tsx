@@ -272,7 +272,6 @@ export default function App() {
             </button>
           </div>
         </div>
-      </div>
     );
   }
   if (authStatus === 'selectGame' && user) {
