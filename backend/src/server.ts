@@ -25,7 +25,7 @@ if (OAUTH_CONFIGURED) {
     {
       clientID: GOOGLE_CLIENT_ID,
       clientSecret: GOOGLE_CLIENT_SECRET,
-      callbackURL: `${(process.env.BACKEND_URL || 'http://localhost:3000').replace(/\\/$/, '')}/auth/google/callback`,
+      callbackURL: `${(process.env.BACKEND_URL || 'http://localhost:3000').endsWith('/') ? (process.env.BACKEND_URL || 'http://localhost:3000').slice(0, -1) : (process.env.BACKEND_URL || 'http://localhost:3000')}/auth/google/callback`,
     },
     async (_accessToken, _refreshToken, profile: Profile, done) => {
       const email = profile.emails?.[0]?.value ?? '';
