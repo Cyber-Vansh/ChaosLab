@@ -159,9 +159,9 @@ io.on('connection', (socket) => {
     console.log('Client disconnected:', socket.id);
   });
 });
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 server.listen(PORT, async () => {
   await connectDB();
-  console.log(`ChaosLab backend running on http://localhost:${PORT}`);
+  console.log(`ChaosLab backend running on port ${PORT}`);
   console.log(`Google OAuth: ${OAUTH_CONFIGURED ? '✅ Configured' : '⚠️  Not configured (guest mode only)'}`);
 });
