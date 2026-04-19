@@ -9,7 +9,7 @@ import { Strategy as GoogleStrategy, Profile } from 'passport-google-oauth20';
 import { SimulationEngine } from './engine/SimulationEngine';
 import * as GameStore from './db/gameStore';
 import { connectDB } from './db/mongoose';
-const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
+const FRONTEND_URL = (process.env.FRONTEND_URL || 'http://localhost:5173').replace(/\/$/, '');
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '';
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || '';
 const SESSION_SECRET = process.env.SESSION_SECRET || 'dev-secret-change-in-prod';

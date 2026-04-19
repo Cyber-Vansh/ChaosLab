@@ -115,7 +115,7 @@ function GameSelectScreen({
     </div>
   );
 }
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:3000').replace(/\/$/, '');
 
 export default function App() {
   const [authStatus, setAuthStatus] = useState<'loading' | 'login' | 'guest' | 'loggedIn' | 'selectGame'>('loading');
@@ -200,7 +200,7 @@ export default function App() {
     fetchGames();
   };
   const handleLogout = async () => {
-    await fetch(`${API_URL}/api/auth/logout`, { method: 'POST', credentials: 'include' });
+    await fetch(`${API_URL}/auth/logout`, { method: 'POST', credentials: 'include' });
     setUser(null);
     setActiveGameId(null);
     setAuthStatus('guest');
